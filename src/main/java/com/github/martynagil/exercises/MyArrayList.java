@@ -3,8 +3,7 @@ package com.github.martynagil.exercises;
 public class MyArrayList<T> {
 
     private int length;
-    private Object[] tab;
-    private T[] tabCasted;
+    private T[] elements;
 
     public MyArrayList(int length) {
         this.length = length;
@@ -16,9 +15,62 @@ public class MyArrayList<T> {
         initialize();
     }
 
+    public void add(T element) {
+        int i = length;
+        while (elements[length] == null) {
+            i--;
+        }
+        elements[i] = element;
+        checkFillingAndIncreaseSizeIfNecessary();
+    }
+
+    public void addAtBeginning(T element) {
+        addAtIndex(element, 0);
+    }
+
+    public void addAtIndex(T element, int index) {
+        if (index <= length || index >= 0) {
+            if (elements[index] != null) {
+                System.arraycopy(elements, index, elements, index + 1, length - 1);
+            }
+            elements[index] = element;
+            checkFillingAndIncreaseSizeIfNecessary();
+        } else {
+            throw new java.lang.IndexOutOfBoundsException("Index out of range");
+        }
+    }
+
+    public void deleteAtIndex(int index) {
+        if (index == length) {
+            elements[index] = null;
+        }
+        if (index < length || index >= 0) {
+            if (elements[index] != null) {
+                System.arraycopy(elements, index+1, elements, index, length - 1);
+            }
+        } else {
+            throw new java.lang.IndexOutOfBoundsException("Index out of range");
+        }
+    }
+
+    public void deleteElement(T element) {
+        for (int i = 0; i < length; i++) {
+            if (elements[i].equals(element)) {
+                deleteAtIndex(i);
+            }
+        }
+    }
+
+    public T getElement(int index) {
+        if (index <= length || index >= 0) {
+            return elements[index];
+        } else {
+            throw new java.lang.IndexOutOfBoundsException("Index out of range");
+        }
+    }
+
     private void initialize() {
-        tab = new Object[length];
-        tabCasted = tabCast(tab);
+        elements = tabCast(new Object[length]);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -26,31 +78,38 @@ public class MyArrayList<T> {
         return (T[]) tab;
     }
 
-    private boolean isTabCastedInAtLeast75PercentFilled() {
+    private boolean shouldArrayBeExtended() {
+        double maxFilling = 0.75;
         int counter = 0;
         for (int i = 0; i < length; i++) {
-            if (tabCasted[i] != null) {
+            if (elements[i] != null) {
                 counter++;
             }
         }
-        return (counter / length) > (3 / 4);
+        return (double) counter / (double) length > maxFilling;
     }
 
-    private T[] twiceTabCastedSize() {
-        T[] tabCastedTemp = tabCasted;
+    private void twiceElementsSize() {
+        T[] tabCastedTemp = elements;
         length = 2 * length;
-        tab = new Object[length];
-        System.arraycopy(tabCastedTemp, 0, tab, 0, length / 2);
-        tabCasted = tabCast(tab);
-        return tabCasted;
+        elements = tabCast(new Object[length]);
+        System.arraycopy(tabCastedTemp, 0, elements, 0, length / 2);
     }
 
-    public void add(T arg) {
-        int i = length;
-        while (tabCasted[length] == null) {
-            i--;
+    private void checkFillingAndIncreaseSizeIfNecessary() {
+        if (shouldArrayBeExtended()) {
+            twiceElementsSize();
         }
-        tabCasted[i] = arg;
+        if (elements[length] != null) {
+            addEmptyField();
+        }
+    }
+
+    private void addEmptyField() {
+        T[] tabCastedTemp = elements;
+        length = length + 1;
+        elements = tabCast(new Object[length]);
+        System.arraycopy(tabCastedTemp, 0, elements, 0, length - 1);
     }
 
 }
