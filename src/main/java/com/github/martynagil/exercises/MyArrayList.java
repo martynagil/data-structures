@@ -1,5 +1,8 @@
 package com.github.martynagil.exercises;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 public class MyArrayList<T> {
 
     private int length;
@@ -46,7 +49,7 @@ public class MyArrayList<T> {
         }
         if (index < length || index >= 0) {
             if (elements[index] != null) {
-                System.arraycopy(elements, index+1, elements, index, length - 1);
+                System.arraycopy(elements, index + 1, elements, index, length - 1);
             }
         } else {
             throw new java.lang.IndexOutOfBoundsException("Index out of range");
@@ -66,6 +69,17 @@ public class MyArrayList<T> {
             return elements[index];
         } else {
             throw new java.lang.IndexOutOfBoundsException("Index out of range");
+        }
+    }
+
+    public boolean containElement(T element) {
+        return Arrays.asList(elements).contains(element);
+    }
+
+    public void iterator() {
+        Iterator<T> iterator = Arrays.asList(elements).iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
         }
     }
 
@@ -111,5 +125,4 @@ public class MyArrayList<T> {
         elements = tabCast(new Object[length]);
         System.arraycopy(tabCastedTemp, 0, elements, 0, length - 1);
     }
-
 }
