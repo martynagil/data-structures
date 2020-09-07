@@ -20,7 +20,7 @@ public class MyArrayList<T> {
 
     public void add(T element) {
         int i = length;
-        while (elements[length] == null) {
+        while (elements[i] == null) {
             i--;
         }
         elements[i] = element;
@@ -71,6 +71,15 @@ public class MyArrayList<T> {
             throw new java.lang.IndexOutOfBoundsException("Index out of range");
         }
     }
+
+    public T getLastElement() {
+        int i = length;
+        while (elements[i] == null) {
+            i--;
+        }
+        return elements[i - 1];
+    }
+
 
     public boolean containElement(T element) {
         return Arrays.asList(elements).contains(element);
