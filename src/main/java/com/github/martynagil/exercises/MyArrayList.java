@@ -83,6 +83,10 @@ public class MyArrayList<T> {
         }
     }
 
+    public int size() {
+        return length;
+    }
+
     private void initialize() {
         elements = tabCast(new Object[length]);
     }
