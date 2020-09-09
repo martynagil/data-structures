@@ -1,9 +1,28 @@
 package com.github.martynagil.exercises;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MySetTest {
 
-    // TODO: 09.09.2020 czy jak się dodaje takie same stringi, to zostaje tylko po jednym z rodzaju
+    @Test
+    void shouldStoreOneElementOfKind() {
+        MySet<String> set = new MySet<>();
+        String string = "string";
 
+        set.add(string);
+        set.add(string);
+        set.add("word");
+
+        int counter = 0;
+
+        for (int i = 0; i < set.size(); i++) {
+            if (set.getElement(i).equals(string)) {
+                counter++;
+            }
+        }
+
+        assertEquals(1, counter);
+    }
 }
