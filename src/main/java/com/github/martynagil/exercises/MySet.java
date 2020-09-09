@@ -19,17 +19,19 @@ public class MySet<T> {
     }
 
     public void delete(T element) {
-        if (isInSet(element)) {
-            arrayList.deleteElement(element);
-        }
+        arrayList.deleteElement(element);
     }
 
-    public void getElement(int index) {
-        arrayList.getElement(index);
+    public T getElement(int index) {
+        return arrayList.getElement(index);
     }
 
     public void iterator() {
         arrayList.iterator();
+    }
+
+    public int size() {
+        return arrayList.size();
     }
 
     private boolean isInSet(T element) {

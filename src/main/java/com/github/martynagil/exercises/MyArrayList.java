@@ -19,11 +19,7 @@ public class MyArrayList<T> {
     }
 
     public void add(T element) {
-        int i = length;
-        while (elements[i] == null) {
-            i--;
-        }
-        elements[i] = element;
+        elements[getLastEmptyField()] = element;
         checkFillingAndIncreaseSizeIfNecessary();
     }
 
@@ -32,22 +28,26 @@ public class MyArrayList<T> {
     }
 
     public void addAtIndex(T element, int index) {
-        if (index <= length || index >= 0) {
+        if (index <= size() + 1 && index >= 0) {
             if (elements[index] != null) {
                 System.arraycopy(elements, index, elements, index + 1, length - 1);
+                elements[index] = element;
+                checkFillingAndIncreaseSizeIfNecessary();
+            } else if (index == size() + 1 || elements[size()] == null) {
+                elements[index] = element;
+                checkFillingAndIncreaseSizeIfNecessary();
+            } else {
+                throw new java.lang.IndexOutOfBoundsException("Index out of range");
             }
-            elements[index] = element;
-            checkFillingAndIncreaseSizeIfNecessary();
         } else {
             throw new java.lang.IndexOutOfBoundsException("Index out of range");
         }
     }
 
     public void deleteAtIndex(int index) {
-        if (index == length) {
+        if (index == size() - 1) {
             elements[index] = null;
-        }
-        if (index < length || index >= 0) {
+        } else if (index < (size() - 1) && index >= 0) {
             if (elements[index] != null) {
                 System.arraycopy(elements, index + 1, elements, index, length - 1);
             }
@@ -57,7 +57,7 @@ public class MyArrayList<T> {
     }
 
     public void deleteElement(T element) {
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < size() ; i++) {
             if (elements[i].equals(element)) {
                 deleteAtIndex(i);
             }
@@ -65,7 +65,7 @@ public class MyArrayList<T> {
     }
 
     public T getElement(int index) {
-        if (index <= length || index >= 0) {
+        if (index <= size() - 1 && index >= 0) {
             return elements[index];
         } else {
             throw new java.lang.IndexOutOfBoundsException("Index out of range");
@@ -73,27 +73,15 @@ public class MyArrayList<T> {
     }
 
     public T getLastElement() {
-        int i = length;
-        while (elements[i] == null) {
-            i--;
-        }
-        return elements[i - 1];
+        return elements[size() - 1];
     }
-
 
     public boolean containElement(T element) {
         return Arrays.asList(elements).contains(element);
     }
 
-    public void iterator() {
-        Iterator<T> iterator = Arrays.asList(elements).iterator();
-        while (iterator.hasNext()) {
-            iterator.next();
-        }
-    }
-
-    public int size() {
-        return length;
+    public Iterator<T> iterator() {
+        return Arrays.asList(elements).iterator();
     }
 
     private void initialize() {
@@ -107,13 +95,18 @@ public class MyArrayList<T> {
 
     private boolean shouldArrayBeExtended() {
         double maxFilling = 0.75;
+
+        return (double) size() / (double) length > maxFilling;
+    }
+
+    public int size() {
         int counter = 0;
         for (int i = 0; i < length; i++) {
             if (elements[i] != null) {
                 counter++;
             }
         }
-        return (double) counter / (double) length > maxFilling;
+        return counter;
     }
 
     private void twiceElementsSize() {
@@ -127,15 +120,17 @@ public class MyArrayList<T> {
         if (shouldArrayBeExtended()) {
             twiceElementsSize();
         }
-        if (elements[length] != null) {
-            addEmptyField();
-        }
     }
 
-    private void addEmptyField() {
-        T[] tabCastedTemp = elements;
-        length = length + 1;
-        elements = tabCast(new Object[length]);
-        System.arraycopy(tabCastedTemp, 0, elements, 0, length - 1);
+    private int getLastEmptyField() {
+        int counter = 0;
+        if (elements[counter] == null) {
+            return counter;
+        } else {
+            while (elements[counter] != null) {
+                counter++;
+            }
+        }
+        return counter;
     }
 }
