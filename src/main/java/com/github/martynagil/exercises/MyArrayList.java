@@ -20,9 +20,7 @@ public class MyArrayList<T> {
     }
 
     public void add(T element) {
-        elements[size] = element;
-        adjustArraySize();
-        size++;
+        addAtIndex(element, size);
     }
 
     public void addAtBeginning(T element) {
@@ -30,35 +28,26 @@ public class MyArrayList<T> {
     }
 
     public void addAtIndex(T element, int index) {
-        if (!(index <= size + 1 && index >= 0)) {
+        if (!(index <= size && index >= 0)) {
             throw new IndexOutOfBoundsException("Index out of range");
         }
 
         if (elements[index] != null) {
-            System.arraycopy(elements, index, elements, index + 1, elements.length - 1);
-            elements[index] = element;
-            adjustArraySize();
-        } else if (index == size + 1 || elements[size] == null) {
-            elements[index] = element;
-            adjustArraySize();
-        } else {
-            throw new IndexOutOfBoundsException("Index out of range");
+            System.arraycopy(elements, index, elements, index + 1, size - index);
         }
-
+        elements[index] = element;
         size++;
+        adjustArraySize();
     }
 
     public void deleteAtIndex(int index) {
-        if (index == size - 1) {
-            elements[index] = null;
-        } else if (index < (size - 1) && index >= 0) {
-            if (elements[index] != null) {
-                System.arraycopy(elements, index + 1, elements, index, elements.length - 1);
-            }
-        } else {
+        if (!(index < size && index >= 0)) {
             throw new IndexOutOfBoundsException("Index out of range");
+        } else if (index == size - 1) {
+            elements[index] = null;
+        } else {
+            System.arraycopy(elements, index + 1, elements, index, size - index);
         }
-
         size--;
     }
 
@@ -82,7 +71,7 @@ public class MyArrayList<T> {
         return elements[size - 1];
     }
 
-    public boolean contain(T element) {
+    public boolean contains(T element) {
         for (int i = 0; i < size; i++) {
             T item = elements[i];
             if (item.equals(element)) {
@@ -93,20 +82,22 @@ public class MyArrayList<T> {
     }
 
     public Iterator<T> iterator() {
-        return Arrays.asList(elements).iterator();
+        T[] list = createArray(size);
+        System.arraycopy(elements, 0, list, 0, size);
+        return Arrays.asList(list).iterator();
     }
 
     private void initialize(int length) {
-        elements = tabCast(length);
+        elements = createArray(length);
     }
 
     @SuppressWarnings({"unchecked"})
-    private T[] tabCast(int length) {
+    private T[] createArray(int length) {
         return (T[]) new Object[length];
     }
 
     private boolean shouldArrayBeExtended() {
-        return (double) size / (double) elements.length > EXTENSION_THRESHOLD;
+        return (double) size / elements.length > EXTENSION_THRESHOLD;
     }
 
     public int getSize() {
@@ -114,10 +105,11 @@ public class MyArrayList<T> {
     }
 
     private void doubleArraySize() {
+        int oldLength = elements.length;
         T[] tabCastedTemp = elements;
-        int length = 2 * elements.length;
-        elements = tabCast(length);
-        System.arraycopy(tabCastedTemp, 0, elements, 0, elements.length / 2);
+        int newLength = 2 * oldLength;
+        elements = createArray(newLength);
+        System.arraycopy(tabCastedTemp, 0, elements, 0, oldLength);
     }
 
     private void adjustArraySize() {

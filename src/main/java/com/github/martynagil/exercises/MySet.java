@@ -13,7 +13,7 @@ public class MySet<T> {
     }
 
     public void add(T element) {
-        if (!isInSet(element)) {
+        if (!contains(element)) {
             arrayList.add(element);
         }
     }
@@ -30,12 +30,12 @@ public class MySet<T> {
         arrayList.iterator();
     }
 
-    public int size() {
+    public int getSize() {
         return arrayList.getSize();
     }
 
-    private boolean isInSet(T element) {
-        return arrayList.contain(element);
+    public boolean contains(T element) {
+        return arrayList.contains(element);
     }
 
 }
