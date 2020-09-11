@@ -19,7 +19,7 @@ public class MySet<T> {
     }
 
     public void delete(T element) {
-        arrayList.deleteElement(element);
+        arrayList.delete(element);
     }
 
     public T getElement(int index) {
@@ -31,11 +31,11 @@ public class MySet<T> {
     }
 
     public int size() {
-        return arrayList.size();
+        return arrayList.getSize();
     }
 
     private boolean isInSet(T element) {
-        return arrayList.containElement(element);
+        return arrayList.contain(element);
     }
 
 }

@@ -5,22 +5,24 @@ import java.util.Iterator;
 
 public class MyArrayList<T> {
 
-    private int length;
+    private static final double EXTENSION_THRESHOLD = 0.75;
+
     private T[] elements;
+    private int size;
 
     public MyArrayList(int length) {
-        this.length = length;
-        initialize();
+        initialize(length);
+        size = 0;
     }
 
     public MyArrayList() {
-        length = 6;
-        initialize();
+        this(6);
     }
 
     public void add(T element) {
-        elements[getLastEmptyField()] = element;
-        checkFillingAndIncreaseSizeIfNecessary();
+        elements[size] = element;
+        adjustArraySize();
+        size++;
     }
 
     public void addAtBeginning(T element) {
@@ -28,36 +30,40 @@ public class MyArrayList<T> {
     }
 
     public void addAtIndex(T element, int index) {
-        if (index <= size() + 1 && index >= 0) {
-            if (elements[index] != null) {
-                System.arraycopy(elements, index, elements, index + 1, length - 1);
-                elements[index] = element;
-                checkFillingAndIncreaseSizeIfNecessary();
-            } else if (index == size() + 1 || elements[size()] == null) {
-                elements[index] = element;
-                checkFillingAndIncreaseSizeIfNecessary();
-            } else {
-                throw new java.lang.IndexOutOfBoundsException("Index out of range");
-            }
-        } else {
-            throw new java.lang.IndexOutOfBoundsException("Index out of range");
+        if (!(index <= size + 1 && index >= 0)) {
+            throw new IndexOutOfBoundsException("Index out of range");
         }
+
+        if (elements[index] != null) {
+            System.arraycopy(elements, index, elements, index + 1, elements.length - 1);
+            elements[index] = element;
+            adjustArraySize();
+        } else if (index == size + 1 || elements[size] == null) {
+            elements[index] = element;
+            adjustArraySize();
+        } else {
+            throw new IndexOutOfBoundsException("Index out of range");
+        }
+
+        size++;
     }
 
     public void deleteAtIndex(int index) {
-        if (index == size() - 1) {
+        if (index == size - 1) {
             elements[index] = null;
-        } else if (index < (size() - 1) && index >= 0) {
+        } else if (index < (size - 1) && index >= 0) {
             if (elements[index] != null) {
-                System.arraycopy(elements, index + 1, elements, index, length - 1);
+                System.arraycopy(elements, index + 1, elements, index, elements.length - 1);
             }
         } else {
-            throw new java.lang.IndexOutOfBoundsException("Index out of range");
+            throw new IndexOutOfBoundsException("Index out of range");
         }
+
+        size--;
     }
 
-    public void deleteElement(T element) {
-        for (int i = 0; i < size() ; i++) {
+    public void delete(T element) {
+        for (int i = 0; i < size; i++) {
             if (elements[i].equals(element)) {
                 deleteAtIndex(i);
             }
@@ -65,72 +71,58 @@ public class MyArrayList<T> {
     }
 
     public T getElement(int index) {
-        if (index <= size() - 1 && index >= 0) {
+        if (index < size && index >= 0) {
             return elements[index];
         } else {
-            throw new java.lang.IndexOutOfBoundsException("Index out of range");
+            throw new IndexOutOfBoundsException("Index out of range");
         }
     }
 
     public T getLastElement() {
-        return elements[size() - 1];
+        return elements[size - 1];
     }
 
-    public boolean containElement(T element) {
-        return Arrays.asList(elements).contains(element);
+    public boolean contain(T element) {
+        for (int i = 0; i < size; i++) {
+            T item = elements[i];
+            if (item.equals(element)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Iterator<T> iterator() {
         return Arrays.asList(elements).iterator();
     }
 
-    private void initialize() {
-        elements = tabCast(new Object[length]);
+    private void initialize(int length) {
+        elements = tabCast(length);
     }
 
     @SuppressWarnings({"unchecked"})
-    private T[] tabCast(Object tab) {
-        return (T[]) tab;
+    private T[] tabCast(int length) {
+        return (T[]) new Object[length];
     }
 
     private boolean shouldArrayBeExtended() {
-        double maxFilling = 0.75;
-
-        return (double) size() / (double) length > maxFilling;
+        return (double) size / (double) elements.length > EXTENSION_THRESHOLD;
     }
 
-    public int size() {
-        int counter = 0;
-        for (int i = 0; i < length; i++) {
-            if (elements[i] != null) {
-                counter++;
-            }
-        }
-        return counter;
+    public int getSize() {
+        return size;
     }
 
-    private void twiceElementsSize() {
+    private void doubleArraySize() {
         T[] tabCastedTemp = elements;
-        length = 2 * length;
-        elements = tabCast(new Object[length]);
-        System.arraycopy(tabCastedTemp, 0, elements, 0, length / 2);
+        int length = 2 * elements.length;
+        elements = tabCast(length);
+        System.arraycopy(tabCastedTemp, 0, elements, 0, elements.length / 2);
     }
 
-    private void checkFillingAndIncreaseSizeIfNecessary() {
+    private void adjustArraySize() {
         if (shouldArrayBeExtended()) {
-            twiceElementsSize();
+            doubleArraySize();
         }
-    }
-
-    private int getLastEmptyField() {
-        int counter = 0;
-        if (elements[counter] == null) {
-            return counter;
-        } else {
-            while (elements[counter] != null) {
-                counter++;
-            }
-        }
-        return counter;
     }
 }

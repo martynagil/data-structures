@@ -77,9 +77,9 @@ class MyArrayListTest {
         MyArrayList<String> list = new MyArrayList<>();
 
         list.add(element);
-        list.deleteElement(element);
+        list.delete(element);
 
-        assertThat(list.containElement(element)).isFalse();
+        assertThat(list.contain(element)).isFalse();
     }
 
     @Test
@@ -118,6 +118,6 @@ class MyArrayListTest {
             list.add("word");
         }
 
-        assertThat(list.size()).isEqualTo(ints);
+        assertThat(list.getSize()).isEqualTo(ints);
     }
 }
