@@ -11,7 +11,7 @@ public class MyArrayList<T> {
     private int size;
 
     public MyArrayList(int length) {
-        initialize(length);
+        elements = createArray(length);
         size = 0;
     }
 
@@ -28,9 +28,8 @@ public class MyArrayList<T> {
     }
 
     public void addAtIndex(T element, int index) {
-        if (!(index <= size && index >= 0)) {
-            throw new IndexOutOfBoundsException("Index out of range");
-        }
+
+        verifyIndexBounds(index, 0, size + 1);
 
         if (elements[index] != null) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -41,9 +40,9 @@ public class MyArrayList<T> {
     }
 
     public void deleteAtIndex(int index) {
-        if (!(index < size && index >= 0)) {
-            throw new IndexOutOfBoundsException("Index out of range");
-        } else if (index == size - 1) {
+        verifyIndexBounds(index, 0, size);
+
+        if (index == size - 1) {
             elements[index] = null;
         } else {
             System.arraycopy(elements, index + 1, elements, index, size - index);
@@ -60,11 +59,8 @@ public class MyArrayList<T> {
     }
 
     public T getElement(int index) {
-        if (index < size && index >= 0) {
-            return elements[index];
-        } else {
-            throw new IndexOutOfBoundsException("Index out of range");
-        }
+        verifyIndexBounds(index, 0, size);
+        return elements[index];
     }
 
     public T getLastElement() {
@@ -87,8 +83,8 @@ public class MyArrayList<T> {
         return Arrays.asList(list).iterator();
     }
 
-    private void initialize(int length) {
-        elements = createArray(length);
+    public int getSize() {
+        return size;
     }
 
     @SuppressWarnings({"unchecked"})
@@ -96,12 +92,14 @@ public class MyArrayList<T> {
         return (T[]) new Object[length];
     }
 
-    private boolean shouldArrayBeExtended() {
-        return (double) size / elements.length > EXTENSION_THRESHOLD;
+    private void adjustArraySize() {
+        if (shouldArrayBeExtended()) {
+            doubleArraySize();
+        }
     }
 
-    public int getSize() {
-        return size;
+    private boolean shouldArrayBeExtended() {
+        return (double) size / elements.length > EXTENSION_THRESHOLD;
     }
 
     private void doubleArraySize() {
@@ -112,9 +110,9 @@ public class MyArrayList<T> {
         System.arraycopy(tabCastedTemp, 0, elements, 0, oldLength);
     }
 
-    private void adjustArraySize() {
-        if (shouldArrayBeExtended()) {
-            doubleArraySize();
+    private void verifyIndexBounds(int index, int lowerBoundary, int upperBoundary) {
+        if (!(index < upperBoundary && index >= lowerBoundary)) {
+            throw new IndexOutOfBoundsException("Index out of range");
         }
     }
 }

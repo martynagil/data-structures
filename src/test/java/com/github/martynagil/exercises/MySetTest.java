@@ -39,7 +39,7 @@ class MySetTest {
         set.add(ELEMENT_1);
         set.add(ELEMENT_2);
 
-        assertThat(set.contains(ELEMENT_2)).isEqualTo(true);
+        assertThat(set.contains(ELEMENT_2)).isTrue();
         assertThat(set.getSize()).isEqualTo(2);
     }
 
