@@ -10,21 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MySetTest {
 
-    private static final String ELEMENT = "String";
-    private static final String ITEM = "Item";
+    private static final String ELEMENT_1 = "String";
+    private static final String ELEMENT_2 = "Item";
 
     @Test
     void shouldStoreOneElementOfKind() {
         MySet<String> set = new MySet<>();
 
-        set.add(ELEMENT);
-        set.add(ELEMENT);
-        set.add(ITEM);
+        set.add(ELEMENT_1);
+        set.add(ELEMENT_1);
+        set.add(ELEMENT_2);
 
         int counter = 0;
 
         for (int i = 0; i < set.getSize(); i++) {
-            if (set.getElement(i).equals(ELEMENT)) {
+            if (set.getElement(i).equals(ELEMENT_1)) {
                 counter++;
             }
         }
@@ -36,31 +36,34 @@ class MySetTest {
     void shouldAddElement() {
         MySet<String> set = new MySet<>();
 
-        set.add(ELEMENT);
-        set.add(ITEM);
+        set.add(ELEMENT_1);
+        set.add(ELEMENT_2);
 
-        assertThat(set.contains(ITEM)).isEqualTo(true);
+        assertThat(set.contains(ELEMENT_2)).isEqualTo(true);
+        assertThat(set.getSize()).isEqualTo(2);
     }
 
     @Test
     void shouldDeleteElement() {
         MySet<String> set = new MySet<>();
 
-        set.add(ITEM);
-        set.add(ELEMENT);
-        set.delete(ELEMENT);
+        set.add(ELEMENT_2);
+        set.add(ELEMENT_1);
+        set.delete(ELEMENT_1);
 
-        assertThat(set.contains(ELEMENT)).isFalse();
+        assertThat(set.contains(ELEMENT_1)).isFalse();
+        assertThat(set.getSize()).isEqualTo(1);
     }
 
     @Test
     void shouldNotDeleteElement() {
         MySet<String> set = new MySet<>();
 
-        set.add(ELEMENT);
-        set.delete(ITEM);
+        set.add(ELEMENT_1);
+        set.delete(ELEMENT_2);
 
         assertThat(set.getSize()).isEqualTo(1);
+        assertThat((set.contains(ELEMENT_1))).isTrue();
     }
 
     @ParameterizedTest
@@ -69,7 +72,7 @@ class MySetTest {
         MySet<String> set = new MySet<>();
 
         for (int i = 0; i < ints; i++) {
-            set.add(ELEMENT + i);
+            set.add(ELEMENT_1 + i);
         }
 
         assertThat(set.getSize()).isEqualTo(ints);
