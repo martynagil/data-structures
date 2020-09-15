@@ -29,7 +29,7 @@ public class MyArrayList<T> {
 
     public void addAtIndex(T element, int index) {
 
-        verifyIndexBounds(index, 0, size + 1);
+        verifyIndexBounds(index, size + 1);
 
         if (elements[index] != null) {
             System.arraycopy(elements, index, elements, index + 1, size - index);
@@ -40,7 +40,7 @@ public class MyArrayList<T> {
     }
 
     public void deleteAtIndex(int index) {
-        verifyIndexBounds(index, 0, size);
+        verifyIndexBounds(index, size);
 
         if (index == size - 1) {
             elements[index] = null;
@@ -59,7 +59,7 @@ public class MyArrayList<T> {
     }
 
     public T getElement(int index) {
-        verifyIndexBounds(index, 0, size);
+        verifyIndexBounds(index, size);
         return elements[index];
     }
 
@@ -110,8 +110,8 @@ public class MyArrayList<T> {
         System.arraycopy(tabCastedTemp, 0, elements, 0, oldLength);
     }
 
-    private void verifyIndexBounds(int index, int lowerBoundary, int upperBoundary) {
-        if (!(index < upperBoundary && index >= lowerBoundary)) {
+    private void verifyIndexBounds(int index, int upperBoundary) {
+        if (!(index < upperBoundary && index >= 0)) {
             throw new IndexOutOfBoundsException("Index out of range");
         }
     }

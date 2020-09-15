@@ -1,5 +1,7 @@
 package com.github.martynagil.exercises;
 
+import java.util.Iterator;
+
 public class MySet<T> {
 
     private MyArrayList<T> arrayList;
@@ -26,8 +28,8 @@ public class MySet<T> {
         return arrayList.getElement(index);
     }
 
-    public void iterator() {
-        arrayList.iterator();
+    public Iterator<T> iterator() {
+        return arrayList.iterator();
     }
 
     public int getSize() {
