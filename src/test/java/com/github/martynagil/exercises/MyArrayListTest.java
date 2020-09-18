@@ -14,42 +14,32 @@ class MyArrayListTest {
     private static final String ELEMENT_1 = "String";
     private static final String ELEMENT_2 = "Item";
 
-    private MyArrayList<String> set() {
-        MyArrayList<String> list = new MyArrayList<>();
-        list.add(ELEMENT_1);
-        list.add(ELEMENT_1);
-        list.add(ELEMENT_1);
-
-        return list;
-    }
-
-
     @Test
     void shouldAddElementAtTheEnd() {
-        MyArrayList<String> list = set();
+        MyArrayList<String> list = initList();
 
         list.add(ELEMENT_2);
 
-        assertThat(list.getLastElement()).isEqualTo(ELEMENT_2);
+        assertThat(list.getLast()).isEqualTo(ELEMENT_2);
     }
 
     @Test
     void shouldAddAtTheBeginning() {
-        MyArrayList<String> list = set();
+        MyArrayList<String> list = initList();
 
         list.addAtBeginning(ELEMENT_2);
 
-        assertThat(list.getElement(0)).isEqualTo(ELEMENT_2);
+        assertThat(list.get(0)).isEqualTo(ELEMENT_2);
     }
 
     @Test
     void shouldAddAtIndex() {
-        MyArrayList<String> list = set();
+        MyArrayList<String> list = initList();
         int index = 2;
 
-        list.addAtIndex(ELEMENT_2, index);
+        list.add(ELEMENT_2, index);
 
-        assertThat(list.getElement(index)).isEqualTo(ELEMENT_2);
+        assertThat(list.get(index)).isEqualTo(ELEMENT_2);
     }
 
     @Test
@@ -58,14 +48,14 @@ class MyArrayListTest {
 
         assertThrows(
                 IndexOutOfBoundsException.class,
-                () -> new MyArrayList<String>().addAtIndex(ELEMENT_1, index)
+                () -> new MyArrayList<String>().add(ELEMENT_1, index)
         );
     }
 
     @Test
     void shouldDeleteElement() {
-        MyArrayList<String> list = set();
-        list.addAtIndex(ELEMENT_2, 2);
+        MyArrayList<String> list = initList();
+        list.add(ELEMENT_2, 2);
 
         list.delete(ELEMENT_2);
 
@@ -81,7 +71,7 @@ class MyArrayListTest {
 
         assertThrows(
                 IndexOutOfBoundsException.class,
-                () -> new MyArrayList<String>().deleteAtIndex(3)
+                () -> new MyArrayList<String>().delete(3)
         );
     }
 
@@ -90,7 +80,7 @@ class MyArrayListTest {
         MyArrayList<String> list = new MyArrayList<>();
         list.add(ELEMENT_1);
 
-        assertThat(list.getElement(0)).isEqualTo(ELEMENT_1);
+        assertThat(list.get(0)).isEqualTo(ELEMENT_1);
     }
 
     @Test
@@ -100,14 +90,14 @@ class MyArrayListTest {
 
         assertThrows(
                 IndexOutOfBoundsException.class,
-                () -> new MyArrayList<String>().getElement(1)
+                () -> new MyArrayList<String>().get(1)
         );
     }
 
     @Test
     void shouldMakeProperIterations() {
-        MyArrayList<String> list = set();
-        list.addAtIndex(ELEMENT_2, 1);
+        MyArrayList<String> list = initList();
+        list.add(ELEMENT_2, 1);
         Iterator<String> iterator = list.iterator();
 
         assertThat(iterator.next()).isEqualTo(ELEMENT_1);
@@ -118,7 +108,7 @@ class MyArrayListTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 50, 100})
-    void shouldExtendProperly(int size) {
+    void shouldAddElementsOverInitialCapacity(int size) {
         MyArrayList<String> list = new MyArrayList<>();
 
         for (int i = 0; i < size; i++) {
@@ -126,5 +116,14 @@ class MyArrayListTest {
         }
 
         assertThat(list.getSize()).isEqualTo(size);
+    }
+
+    private MyArrayList<String> initList() {
+        MyArrayList<String> list = new MyArrayList<>();
+        list.add(ELEMENT_1);
+        list.add(ELEMENT_1);
+        list.add(ELEMENT_1);
+
+        return list;
     }
 }

@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public class MySet<T> {
 
-    private MyArrayList<T> arrayList;
+    private final MyArrayList<T> arrayList;
 
     public MySet(int length) {
         arrayList = new MyArrayList<>(length);
@@ -24,8 +24,8 @@ public class MySet<T> {
         arrayList.delete(element);
     }
 
-    public T getElement(int index) {
-        return arrayList.getElement(index);
+    public T get(int index) {
+        return arrayList.get(index);
     }
 
     public Iterator<T> iterator() {

@@ -20,32 +20,32 @@ public class MyArrayList<T> {
     }
 
     public void add(T element) {
-        addAtIndex(element, size);
+        add(element, size);
     }
 
     public void addAtBeginning(T element) {
-        addAtIndex(element, 0);
+        add(element, 0);
     }
 
-    public void addAtIndex(T element, int index) {
+    public void add(T element, int index) {
 
         verifyIndexBounds(index, size + 1);
 
         if (elements[index] != null) {
-            System.arraycopy(elements, index, elements, index + 1, size - index);
+            move(index, index + 1, index);
         }
         elements[index] = element;
         size++;
         adjustArraySize();
     }
 
-    public void deleteAtIndex(int index) {
+    public void delete(int index) {
         verifyIndexBounds(index, size);
 
         if (index == size - 1) {
             elements[index] = null;
         } else {
-            System.arraycopy(elements, index + 1, elements, index, size - index);
+            move(index + 1, index, index);
         }
         size--;
     }
@@ -53,17 +53,17 @@ public class MyArrayList<T> {
     public void delete(T element) {
         for (int i = 0; i < size; i++) {
             if (elements[i].equals(element)) {
-                deleteAtIndex(i);
+                delete(i);
             }
         }
     }
 
-    public T getElement(int index) {
+    public T get(int index) {
         verifyIndexBounds(index, size);
         return elements[index];
     }
 
-    public T getLastElement() {
+    public T getLast() {
         return elements[size - 1];
     }
 
@@ -114,5 +114,9 @@ public class MyArrayList<T> {
         if (!(index < upperBoundary && index >= 0)) {
             throw new IndexOutOfBoundsException("Index out of range");
         }
+    }
+
+    private void move(int scrPos, int dstPos, int index) {
+        System.arraycopy(elements, scrPos, elements, dstPos, size - index);
     }
 }
