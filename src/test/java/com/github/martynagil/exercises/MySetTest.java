@@ -50,7 +50,7 @@ class MySetTest {
     }
 
     @Test
-    void shouldNotDeleteElement() {
+    void shouldNotDeleteNonexistentElement() {
         MySet<String> set = new MySet<>();
         set.add(ELEMENT_1);
 
@@ -61,7 +61,7 @@ class MySetTest {
     }
 
     @Test
-    void shouldMakeProperIterations() {
+    void shouldIterate() {
         MySet<String> set = new MySet<>();
         set.add(ELEMENT_1);
         set.add(ELEMENT_2);
@@ -73,7 +73,7 @@ class MySetTest {
 
     @ParameterizedTest
     @ValueSource(ints = {2, 50, 100})
-    void shouldExtendProperly(int size) {
+    void shouldAddElementsOverInitialCapacity(int size) {
         MySet<String> set = new MySet<>();
 
         for (int i = 0; i < size; i++) {

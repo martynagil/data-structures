@@ -95,7 +95,7 @@ class MyArrayListTest {
     }
 
     @Test
-    void shouldMakeProperIterations() {
+    void shouldIterate() {
         MyArrayList<String> list = initList();
         list.add(ELEMENT_2, 1);
         Iterator<String> iterator = list.iterator();
